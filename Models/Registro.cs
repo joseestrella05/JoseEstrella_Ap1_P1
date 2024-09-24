@@ -6,7 +6,7 @@ public class Registro
 {
     [Key]
     public int Id { get; set; }
-    [Required]
+    [Required(ErrorMessage ="campo obligatotio")]
     public string Nombre { get; set; }
 
 }
