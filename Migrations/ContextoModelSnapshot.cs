@@ -26,9 +26,16 @@ namespace JoseEstrella_Ap1_P1.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Deudor")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Monto")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Pretamos");
+                    b.ToTable("Registro");
                 });
 #pragma warning restore 612, 618
         }

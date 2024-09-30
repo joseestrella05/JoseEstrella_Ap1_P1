@@ -6,5 +6,5 @@ namespace JoseEstrella_Ap1_P1.DAL;
 public class Contexto(DbContextOptions<Contexto> options): DbContext(options)
 {
 
-    public DbSet<Pretamos> Registro { get; set; }
+    public DbSet<Pretamos> pretamos { get; set; }
 }

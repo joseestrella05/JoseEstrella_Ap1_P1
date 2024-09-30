@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JoseEstrella_Ap1_P1.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20240923231815_initial")]
+    [Migration("20240930224813_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -29,9 +29,16 @@ namespace JoseEstrella_Ap1_P1.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Deudor")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Monto")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Pretamos");
+                    b.ToTable("Registro");
                 });
 #pragma warning restore 612, 618
         }
