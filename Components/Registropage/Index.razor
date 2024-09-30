@@ -1,4 +1,4 @@
-﻿@page "/Registro/Index"
+﻿@page "/Pretamos/Index"
 @rendermode InteractiveServer
 @inject NavigationManager navigation
 
@@ -9,11 +9,12 @@
             <h5 class="card-header text-center">Registro</h5>
         </div>
 
-        <div class="card-body">
-            <div class="col-md-15 text-end">
-                <a href="/Prioridad/Create" class="btn btn-success" type="button"><span class="bi bi-plus-square-fill mt-3"></span> Crear </a>
+            <div class="card-body">
+                <div class="col-md-15 text-end">
+                    <a href="/Tienda/Create" class="btn btn-primary" type="button"><span class="bi bi-plus-square-fill mt-3"></span> Crear </a>
+                </div>
             </div>
-        </div>
+       
 
         <table class="table table-striped-columns table-hover">
             <thead >
@@ -26,11 +27,27 @@
                 </tr>
             </thead>
             <tbody>
+                <tr>
+
+                    <td class="text-center">
+                        <a href="#" class="btn bi bi-eye"></a>
+                    </td>
+                    <td class="text-center">
+                        <a href="#" class="btn bi bi-pencil-square"></a>
+                    </td>
+                    <td class="text-center">
+                        <a href="#" class="btn bi bi-trash"></a>
+                    </td>
+                </tr>
+  
             </tbody>
         </table>
     </div>
 </div>
 
 @code {
+    public List<Pretamos> registros = new List<Pretamos>();
+    
 
+    
 }

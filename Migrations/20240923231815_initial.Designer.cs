@@ -19,19 +19,19 @@ namespace JoseEstrella_Ap1_P1.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.8");
 
-            modelBuilder.Entity("JoseEstrella_Ap1_P1.Models.Registro", b =>
+            modelBuilder.Entity("JoseEstrella_Ap1_P1.Models.Pretamos", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Nombre")
+                    b.Property<string>("Concepto")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Registro");
+                    b.ToTable("Pretamos");
                 });
 #pragma warning restore 612, 618
         }
