@@ -1,6 +1,6 @@
 ﻿@page "/Prestamo/Create"
 @rendermode InteractiveServer
-@inject Servicio Servicio
+@inject PrestamoService Servicio
 @inject NavigationManager navigation
 
 <EditForm Model="pretamos" OnValidSubmit="Crear">
@@ -51,7 +51,6 @@
 @code {
     public Pretamos pretamos { get; set; } = new Pretamos();
     public List<Pretamos> ListaPretamo { get; set; } = new List<Pretamos>();
-    public string Mensaje { get; set; }
 
     protected override async Task OnInitializedAsync()
     {

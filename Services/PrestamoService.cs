@@ -5,10 +5,10 @@ using System.Linq.Expressions;
 
 namespace JoseEstrella_Ap1_P1.Services;
 
-public class Servicio{
+public class PrestamoService{
     private readonly Contexto _context;
 
-    public Servicio(Contexto context) => _context = context;
+    public PrestamoService(Contexto context) => _context = context;
 
     public async Task<bool> Guardar(Pretamos pretamos)
     {

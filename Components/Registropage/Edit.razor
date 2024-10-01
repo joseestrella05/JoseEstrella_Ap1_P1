@@ -1,0 +1,72 @@
+﻿@page "/Prestamo/Edit/{Id:int}"
+@rendermode InteractiveServer
+@inject PrestamoService servicio
+@inject NavigationManager navigation
+
+<PageTitle>Editar Prestamo</PageTitle>
+<EditForm Model="pretamos" OnValidSubmit="Modificar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="container">
+        <div class="card shadow-lg">
+                @*header*@
+                <div class="card-header bg-primary text-white text-center">
+                    <h2><strong>Modificar</strong></h2>
+                </div>
+                    @*Id*@
+                    <label class="form-label" for="Id"><strong>Id</strong></label>
+                    <InputNumber id="id" class="form-control" @bind-Value="@pretamos.Id" readonly></InputNumber>
+
+                    @*Deudor*@
+                    <label class="form-label" for="Deudor"><strong>Deudor</strong></label>
+                    <InputText id="nombres" class="form-control" @bind-Value="@pretamos.Deudor"></InputText>
+                    <ValidationMessage For="@(() => pretamos.Deudor)"></ValidationMessage>
+
+                    @*Concepto*@
+                    <label class="form-label" for="Concepto"><strong>Concepto</strong></label>
+                    <InputText id="WhatsApp" class="form-control" @bind-Value="@pretamos.Concepto"></InputText>
+                    <ValidationMessage For="@(() => pretamos.Concepto)"></ValidationMessage>
+
+                    @*Monto*@
+                    <label class="form-label" for="Monto"><strong>Monto</strong></label>
+                    <InputNumber id="WhatsApp" class="form-control" @bind-Value="@pretamos.Monto"></InputNumber>
+                    <ValidationMessage For="@(() => pretamos.Monto)"></ValidationMessage>
+
+                <div>
+                    @*footer*@
+                    <div class="card-footer">
+                        <a type="button" href="/Pretamos/Index"  class="btn btn-outline-danger"><span class="bi bi-arrow-bar-left"></span> Volver </a>
+                        <button type="submit" class="btn btn-success bi bi-floppy-fill">Guardar</button>
+                    </div>
+                </div>
+        </div>
+    </div>
+    
+</EditForm>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    public Pretamos pretamos { get; set; } = new Pretamos();
+    public string Mensaje { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id > 0)
+        {
+            pretamos = await servicio.Buscar(Id);
+        }
+    }
+
+    public async Task Modificar()
+    {
+
+
+        var guardar = await servicio.Guardar(pretamos);
+        return;
+
+    }
+    
+}
+
+

@@ -1,6 +1,6 @@
 ﻿@page "/Pretamos/Index"
 @rendermode InteractiveServer
-@inject Servicio servicio
+@inject PrestamoService servicio
 @inject NavigationManager navigation
 
 <PageTitle>Registro Prestamo</PageTitle>
@@ -37,10 +37,10 @@
                         <td>@prestamo.Concepto</td>
                         <td>@prestamo.Monto</td>
                         <td class="text-center">
-                            <a href="/Pretamo/Delete" class="btn btn-danger bi bi-eye "></a>
+                            <a href="/Prestamo/Edit/@prestamo.Id" class="btn btn-success bi bi-eye ">Modificar</a>
                         </td>
                         <td class="text-center">
-                            <a href="/Pretamo/Edit" class="btn btn-success bi bi-pencil-square"></a>
+                            <a href="/Prestamo/Delete/@prestamo.Id" class="btn btn-danger bi bi-pencil-square">Eliminar</a>
                         </td>
                     }
 

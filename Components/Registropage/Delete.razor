@@ -1,0 +1,81 @@
+﻿@page "/Prestamo/Delete/{Id:int}"
+@rendermode InteractiveServer
+@inject PrestamoService servicio
+@inject NavigationManager navigation
+
+
+<PageTitle>Eliminar Pretamo</PageTitle>
+
+@if (pretamos != null)
+{
+    @*Header*@
+    <div class="card-header bg-primary text-white text-center">
+        <h3><strong>Eliminar Prestamo</strong></h3>
+    </div>
+    <div class="container">
+        <div class="card shadow-lg">
+            @*Header*@
+            <div class="card-body">
+                <h5><strong>¿Estás seguro de que quieres eliminar este pretamo</strong></h5>
+                <div class="mb-1">
+                    <p class="mb-0">Id: @pretamos.Id</p>
+                </div>
+                <div class="mb-1">
+                    <p class="mb-0">Deudor: @pretamos.Deudor</p>
+                </div>
+                <div class="mb-1">
+                    <p class="mb-0">Concepto: @pretamos.Concepto </p>
+                </div>
+                <div class="mb-1">
+                    <p class="mb-0">Monto: @pretamos.Monto </p>
+                </div>
+            </div>
+            @*Footer*@
+            <div class="card-footer">
+                <a type="button" href="/Cliente/Index" class="btn btn-outline-danger"><span class="bi bi-arrow-bar-left"></span> Volver </a>
+                <button type="button" class="btn btn-danger bi bi-trash-fill" @onclick="Eliminar">Eliminar</button>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <p>No se encontró ningún cliente con ese ID</p>
+}
+
+<div>@Mensaje</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    public Pretamos pretamos { get; set; }
+
+    public string Mensaje = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        if (Id > 0)
+        {
+            pretamos = await servicio.Buscar(Id);
+        }
+    }
+
+    public async Task Eliminar()
+    {
+        if (pretamos != null)
+        {
+            var eliminar = await servicio.Eliminar(Id);
+            if (eliminar)
+            {
+                Mensaje = "eliminado";
+                navigation.NavigateTo("/Prestamo/Index");
+            }
+            else
+            {
+                Mensaje = "Error, no se elimino";
+            }
+        }
+    }
+
+}
