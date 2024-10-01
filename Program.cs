@@ -1,5 +1,6 @@
 using JoseEstrella_Ap1_P1.Components;
 using JoseEstrella_Ap1_P1.DAL;
+using JoseEstrella_Ap1_P1.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,7 @@ builder.Services.AddRazorComponents()
 var ConStr = builder.Configuration.GetConnectionString("ConStr");
 
 builder.Services.AddDbContext<Contexto>(O => O.UseSqlite(ConStr));
+builder.Services.AddScoped<Servicio>();
 
 
 var app = builder.Build();

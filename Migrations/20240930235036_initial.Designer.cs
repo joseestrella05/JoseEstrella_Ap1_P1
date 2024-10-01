@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JoseEstrella_Ap1_P1.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20240930224813_initial")]
+    [Migration("20240930235036_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -38,7 +38,7 @@ namespace JoseEstrella_Ap1_P1.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Registro");
+                    b.ToTable("pretamos");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,43 +1,49 @@
 ﻿@page "/Pretamos/Index"
 @rendermode InteractiveServer
+@inject Servicio servicio
 @inject NavigationManager navigation
 
-<PageTitle></PageTitle>
+<PageTitle>Registro Prestamo</PageTitle>
 <div class="container">
     <div class="card shadow-lg">
         <div class="card-header">
-            <h5 class="card-header text-center">Registro</h5>
+            <h5 class="card-header text-center">Registro Pretamo</h5>
         </div>
 
             <div class="card-body">
                 <div class="col-md-15 text-end">
-                    <a href="/Tienda/Create" class="btn btn-primary" type="button"><span class="bi bi-plus-square-fill mt-3"></span> Crear </a>
+                <a href="/Prestamo/Create" class="btn btn-primary" type="button"><span class="bi bi-plus-square-fill mt-3"></span> Crear </a>
                 </div>
             </div>
        
-
-        <table class="table table-striped-columns table-hover">
+        @*body*@
+        <table class="table table-striped-columns table-hover text-center">
             <thead >
                 <tr>
                     <th>Id</th>
-                    <th>Nombre</th>
-                    <th>Ver</th>
+                    <th>Deudor</th>
+                    <th>Concepto</th>
+                    <th>Monto</th>
                     <th>Modificar</th>
                     <th>Eliminar</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
+                    @foreach (var prestamo in ListPretamo)
+                    {
+                        <td>@prestamo.Id</td>
+                        <td>@prestamo.Deudor</td>
+                        <td>@prestamo.Concepto</td>
+                        <td>@prestamo.Monto</td>
+                        <td class="text-center">
+                            <a href="/Pretamo/Delete" class="btn btn-danger bi bi-eye "></a>
+                        </td>
+                        <td class="text-center">
+                            <a href="/Pretamo/Edit" class="btn btn-success bi bi-pencil-square"></a>
+                        </td>
+                    }
 
-                    <td class="text-center">
-                        <a href="#" class="btn bi bi-eye"></a>
-                    </td>
-                    <td class="text-center">
-                        <a href="#" class="btn bi bi-pencil-square"></a>
-                    </td>
-                    <td class="text-center">
-                        <a href="#" class="btn bi bi-trash"></a>
-                    </td>
                 </tr>
   
             </tbody>
@@ -46,8 +52,15 @@
 </div>
 
 @code {
-    public List<Pretamos> registros = new List<Pretamos>();
+    public List<Pretamos> ListPretamo = new List<Pretamos>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListPretamo = await servicio.Listar(c => true);
+    }
     
+        
 
     
+
 }

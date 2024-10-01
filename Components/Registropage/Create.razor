@@ -1,5 +1,68 @@
-﻿<h3>Create</h3>
+﻿@page "/Prestamo/Create"
+@rendermode InteractiveServer
+@inject Servicio Servicio
+@inject NavigationManager navigation
+
+<EditForm Model="pretamos" OnValidSubmit="Crear">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="container">
+        <div class="card shadow-lg">
+            @*header*@
+            <div class="card-header bg-primary text-white text-center">
+                <h2><strong>Crear Pretamo</strong></h2>
+            </div>
+            @*Body*@
+            <div class="card-body">
+                @*Id*@
+                <label class="form-label" for="Id"><strong>Id</strong></label>
+                <InputNumber id="id" class="form-control" @bind-Value="@pretamos.Id" readonly></InputNumber>
+
+                @*Deudor*@
+                <label class="form-label" for="Deudor"><strong>Deudor</strong></label>
+                <InputText id="nombres" class="form-control" @bind-Value="@pretamos.Deudor"></InputText>
+                <ValidationMessage For="@(() => pretamos.Deudor)"></ValidationMessage>
+
+                @*Concepto*@
+                <label class="form-label" for="Concepto"><strong>Concepto</strong></label>
+                <InputText id="WhatsApp" class="form-control" @bind-Value="@pretamos.Concepto"></InputText>
+                <ValidationMessage For="@(() => pretamos.Concepto)"></ValidationMessage>  
+                
+                @*Monto*@
+                <label class="form-label" for="Monto"><strong>Monto</strong></label>
+                <InputNumber id="WhatsApp" class="form-control" @bind-Value="@pretamos.Monto"></InputNumber>
+                <ValidationMessage For="@(() => pretamos.Monto)"></ValidationMessage>
+
+                <div>
+                    @*footer*@
+                    <div class="card-footer">
+                        <a type="button" href="/Pretamos/Index" class="btn btn-outline-danger"><span class="bi bi-arrow-bar-left"></span> Volver </a>
+                        <button type="submit" class="btn btn-success bi bi-floppy-fill">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</EditForm>
+
+
 
 @code {
+    public Pretamos pretamos { get; set; } = new Pretamos();
+    public List<Pretamos> ListaPretamo { get; set; } = new List<Pretamos>();
+    public string Mensaje { get; set; }
 
+    protected override async Task OnInitializedAsync()
+    {
+        ListaPretamo = await Servicio.Listar(t => true);
+    }
+
+    public async Task Crear()
+    {
+        var Guardar = await Servicio.Guardar(pretamos);
+        return;
+    }
+
+    
 }

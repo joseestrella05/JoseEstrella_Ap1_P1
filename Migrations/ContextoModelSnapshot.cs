@@ -35,7 +35,7 @@ namespace JoseEstrella_Ap1_P1.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Registro");
+                    b.ToTable("pretamos");
                 });
 #pragma warning restore 612, 618
         }
