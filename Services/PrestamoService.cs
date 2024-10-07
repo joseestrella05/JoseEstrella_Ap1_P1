@@ -12,6 +12,7 @@ public class PrestamoService{
 
     public async Task<bool> Guardar(Pretamos pretamos)
     {
+        pretamos.Balance = pretamos.Monto;
         if (!await Existe(pretamos.Id))
             return await Insertar(pretamos);
         else
