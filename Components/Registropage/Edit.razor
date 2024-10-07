@@ -48,7 +48,8 @@
     [Parameter]
     public int Id { get; set; }
     public Pretamos pretamos { get; set; } = new Pretamos();
-    public string Mensaje { get; set; }
+
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -60,11 +61,9 @@
 
     public async Task Modificar()
     {
-
-
         var guardar = await servicio.Guardar(pretamos);
+        navigation.NavigateTo("/Pretamos/Index");
         return;
-
     }
     
 }
