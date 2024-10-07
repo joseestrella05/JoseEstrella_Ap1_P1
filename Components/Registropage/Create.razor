@@ -51,6 +51,21 @@
 @code {
     public Pretamos pretamos { get; set; } = new Pretamos();
     public List<Pretamos> ListaPretamo { get; set; } = new List<Pretamos>();
+    List<ToastMessage> MensajeToast = new List<ToastMessage>();
+
+    private ToastMessage CreateToastMessage(ToastType toastType, string mensaje)
+    => new ToastMessage
+        {
+            Type = toastType,
+            Title = "Notificación",
+            HelpText = $"{DateTime.Now}",
+            Message = mensaje,
+        };
+
+    private void Mensaje(ToastType toastType, string mensaje)
+    {
+        MensajeToast.Add(CreateToastMessage(toastType, mensaje));
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -60,6 +75,7 @@
     public async Task Crear()
     {
         var Guardar = await Servicio.Guardar(pretamos);
+        Mensaje(ToastType.Success, "Prestamo guardado correctamente.");
         return;
     }
 
