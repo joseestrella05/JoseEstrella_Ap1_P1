@@ -6,8 +6,9 @@
 <EditForm Model="pretamos" OnValidSubmit="Crear">
     <DataAnnotationsValidator />
     <ValidationSummary />
+    <Toasts class="p-3" Messages="MensajeToast" Placement="ToastsPlacement.TopRight" />
     <div class="container">
-        <div class="card shadow-lg">
+        <div class="Contenedor_Secundario">
             @*header*@
             <div class="card-header bg-primary text-white text-center">
                 <h2><strong>Crear Pretamo</strong></h2>
