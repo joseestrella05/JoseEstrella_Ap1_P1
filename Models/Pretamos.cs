@@ -19,4 +19,9 @@ public class Pretamos
     [Range(0, 200000, ErrorMessage = "Favor de introducir un sueldo mayor que 1 y menor que 200000.")]
     public int Monto { get; set; }
 
+    [Required(ErrorMessage = "El monto es obligatorio")]
+    [Range(0, 200000, ErrorMessage = "Favor de introducir un sueldo mayor que 1 y menor que 200000.")]
+    public int Balance {  get; set; }
+
+
 }
