@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JoseEstrella_Ap1_P1.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20240930235036_initial")]
+    [Migration("20241007231923_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -23,6 +23,9 @@ namespace JoseEstrella_Ap1_P1.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Balance")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Concepto")

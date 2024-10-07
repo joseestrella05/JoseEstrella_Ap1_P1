@@ -22,6 +22,9 @@ namespace JoseEstrella_Ap1_P1.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("Balance")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Concepto")
                         .IsRequired()
                         .HasColumnType("TEXT");
