@@ -29,9 +29,10 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    @foreach (var prestamo in ListPretamo)
-                    {
+
+                @foreach (var prestamo in ListPretamo)
+                {
+                    <tr>
                         <td>@prestamo.Id</td>
                         <td>@prestamo.Deudor</td>
                         <td>@prestamo.Concepto</td>
@@ -42,9 +43,10 @@
                         <td class="text-center">
                             <a href="/Prestamo/Delete/@prestamo.Id" class="btn btn-danger bi bi-trash ">Eliminar</a>
                         </td>
-                    }
+                    </tr>
+                }
 
-                </tr>
+                
   
             </tbody>
         </table>
@@ -59,8 +61,7 @@
         ListPretamo = await servicio.Listar(c => true);
     }
     
-        
-
+    
     
 
 }
