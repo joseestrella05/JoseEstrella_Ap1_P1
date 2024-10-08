@@ -11,7 +11,28 @@
             <h5 class="card-header text-center bg-primary">Registro Prestamo</h5>
         </div>
 
-        <div class="card-body">
+        <div class="row p-3">
+            <div class="col-md-5">
+                <label for="Filtro" class="form-label"><strong>Filtrar por:</strong></label>
+                <InputSelect id="filtro" class="form-select" @bind-Value="filtro">
+                    <option value="" disabled>Seleccionar</option>
+                    <option value="id">PrestamoId</option>
+                    <option value="Deudor">Deudor</option>
+                    <option value="Concepto">Concepto</option>
+                    <option value="Monto">Monto</option>
+                </InputSelect>
+            </div>
+
+            <div class="col-md-7">
+                <label for="ValorFiltro" class="form-label"><strong>B&uacute;squeda:</strong></label>
+                <div class="input-group">
+                    <input @bind="valorFiltro" class="form-control" placeholder="Buscar" />
+                    <button @onclick="Buscar" class="btn btn-primary" type="button">
+                        <span class="bi bi-search"></span> Buscar
+                    </button>
+                </div>
+            </div>
+
             <div class="col-md-3">
                 <a href="/Prestamo/Create" class="btn btn-success" type="button">
                     <span class="bi bi-floppy"></span> Crear
@@ -56,10 +77,43 @@
 @code {
     public List<Pretamos> ListPretamo { get; set; } = new List<Pretamos>();
     public List<Deudores> Deudor { get; set; } = new List<Deudores>();
+    private string filtro = "";
+    private string valorFiltro = "";
 
     protected override async Task OnInitializedAsync()
     {
         ListPretamo = await servicio.Listar(c => true);
         Deudor = await DeudorService.Listar(c => true);
     }
+
+    private async Task Buscar()
+    {
+        if (!string.IsNullOrWhiteSpace(valorFiltro))
+        {
+            if (filtro == "id" && int.TryParse(valorFiltro, out int prestamoId))
+            {
+                ListPretamo = await servicio.Listar(p => p.Id == prestamoId);
+            }
+            else if (filtro == "Deudor")
+            {
+                var deudoresFiltrados = Deudor
+                .Where(d => d.Nombres.Contains(valorFiltro, StringComparison.OrdinalIgnoreCase))
+                .Select(d => d.DeudorId)
+                .ToList();
+
+                ListPretamo = await servicio.Listar(p => deudoresFiltrados.Contains(p.DeudorId));
+            }
+
+            else if (filtro == "Concepto")
+            {
+                ListPretamo = ListPretamo.Where(t => t.Concepto.Contains(valorFiltro, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+
+        }
+        else
+        {
+            ListPretamo = await servicio.Listar(p => true);
+        }
+    }
+
 }
