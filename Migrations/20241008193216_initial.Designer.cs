@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JoseEstrella_Ap1_P1.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20241007231923_initial")]
+    [Migration("20241008193216_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -18,6 +18,28 @@ namespace JoseEstrella_Ap1_P1.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.8");
+
+            modelBuilder.Entity("JoseEstrella_Ap1_P1.Models.Deudores", b =>
+                {
+                    b.Property<int>("DeudorId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Nombres")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("DeudorId");
+
+                    b.ToTable("Deudores");
+
+                    b.HasData(
+                        new
+                        {
+                            DeudorId = 1,
+                            Nombres = "Reyphil"
+                        });
+                });
 
             modelBuilder.Entity("JoseEstrella_Ap1_P1.Models.Pretamos", b =>
                 {
@@ -32,16 +54,28 @@ namespace JoseEstrella_Ap1_P1.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Deudor")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("DeudorId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("Monto")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DeudorId");
+
                     b.ToTable("pretamos");
+                });
+
+            modelBuilder.Entity("JoseEstrella_Ap1_P1.Models.Pretamos", b =>
+                {
+                    b.HasOne("JoseEstrella_Ap1_P1.Models.Deudores", "Deudores")
+                        .WithMany()
+                        .HasForeignKey("DeudorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Deudores");
                 });
 #pragma warning restore 612, 618
         }
