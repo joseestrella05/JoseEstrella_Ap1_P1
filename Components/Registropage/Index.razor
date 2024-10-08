@@ -54,7 +54,6 @@
             <tbody>
                 @foreach (var prestamo in ListPretamo)
                 {
-                    // Find the debtor by matching DeudorId
                     var deudor = Deudor.FirstOrDefault(d => d.DeudorId == prestamo.DeudorId);
                     <tr>
                         <td>@prestamo.Id</td>

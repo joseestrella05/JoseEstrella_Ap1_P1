@@ -18,5 +18,7 @@ namespace JoseEstrella_Ap1_P1.Services
                 .Where(criterio)
                 .ToListAsync();
         }
+
+
     }
 }

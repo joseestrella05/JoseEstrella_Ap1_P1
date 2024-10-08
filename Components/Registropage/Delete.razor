@@ -1,38 +1,41 @@
 ﻿@page "/Prestamo/Delete/{Id:int}"
 @rendermode InteractiveServer
 @inject PrestamoService servicio
+@inject DeudorServices DeudorService
 @inject NavigationManager navigation
 
-
-<PageTitle>Eliminar Pretamo</PageTitle>
+<PageTitle>Eliminar Prestamo</PageTitle>
 
 @if (pretamos != null)
 {
-    @*Header*@
+    var deudor = Deudor.FirstOrDefault(d => d.DeudorId == pretamos.DeudorId);
+
     <div class="card-header bg-primary text-white text-center">
         <h3><strong>Eliminar Prestamo</strong></h3>
     </div>
     <div class="container">
         <div class="card shadow-lg">
-            @*Header*@
+           
             <div class="card-body">
-                <h5><strong>¿Estás seguro de que quieres eliminar este pretamo</strong></h5>
+                <h5><strong>¿Estás seguro de que quieres eliminar este prestamo?</strong></h5>
                 <div class="mb-1">
                     <p class="mb-0">Id: @pretamos.Id</p>
                 </div>
                 <div class="mb-1">
-                    <p class="mb-0">Deudor: @pretamos.Deudor</p>
+                    <p class="mb-0">Deudor: @(deudor != null ? deudor.Nombres : "No encontrado")</p>
                 </div>
                 <div class="mb-1">
-                    <p class="mb-0">Concepto: @pretamos.Concepto </p>
+                    <p class="mb-0">Concepto: @pretamos.Concepto</p>
                 </div>
                 <div class="mb-1">
-                    <p class="mb-0">Monto: @pretamos.Monto </p>
+                    <p class="mb-0">Monto: @pretamos.Monto</p>
                 </div>
             </div>
-            @*Footer*@
+            
             <div class="card-footer">
-                <a type="button" href="/pretamos/Index" class="btn btn-outline-danger"><span class="bi bi-arrow-bar-left"></span> Volver </a>
+                <a type="button" href="/Pretamos/Index" class="btn btn-outline-danger">
+                    <span class="bi bi-arrow-bar-left"></span> Volver
+                </a>
                 <button type="button" class="btn btn-danger bi bi-trash-fill" @onclick="Eliminar">Eliminar</button>
             </div>
         </div>
@@ -40,7 +43,7 @@
 }
 else
 {
-    <p>No se encontró ningún cliente con ese ID</p>
+    <p>No se encontró ningún prestamo con ese ID</p>
 }
 
 <div>@Mensaje</div>
@@ -49,15 +52,15 @@ else
     [Parameter]
     public int Id { get; set; }
     public Pretamos pretamos { get; set; }
-
+    public List<Deudores> Deudor { get; set; } = new List<Deudores>();
     public string Mensaje = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-
         if (Id > 0)
         {
             pretamos = await servicio.Buscar(Id);
+            Deudor = await DeudorService.Listar(c => true); 
         }
     }
 
@@ -68,14 +71,13 @@ else
             var eliminar = await servicio.Eliminar(Id);
             if (eliminar)
             {
-                Mensaje = "eliminado";
-                navigation.NavigateTo("/Pretamos/Index");
+                Mensaje = "El prestamo ha sido eliminado.";
+                navigation.NavigateTo("/Prestamos/Index");
             }
             else
             {
-                Mensaje = "Error, no se elimino";
+                Mensaje = "Error, no se pudo eliminar el prestamo.";
             }
         }
     }
-
 }
