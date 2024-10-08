@@ -1,6 +1,7 @@
 ﻿@page "/Prestamo/Create"
 @rendermode InteractiveServer
 @inject PrestamoService Servicio
+@inject DeudorServices DeudorService
 @inject NavigationManager navigation
 
 <EditForm Model="pretamos" OnValidSubmit="Crear">
@@ -9,33 +10,31 @@
     <Toasts class="p-3" Messages="MensajeToast" Placement="ToastsPlacement.TopRight" />
     <div class="container">
         <div class="Contenedor_Secundario">
-            @*header*@
             <div class="card-header bg-primary text-white text-center">
-                <h2><strong>Crear Pretamo</strong></h2>
+                <h2><strong>Crear Prestamo</strong></h2>
             </div>
-            @*Body*@
             <div class="card-body">
-                @*Id*@
                 <label class="form-label" for="Id"><strong>Id</strong></label>
-                <InputNumber id="id" class="form-control" @bind-Value="@pretamos.Id" readonly></InputNumber>
+                <InputNumber id="id" class="form-control" @bind-Value="@pretamos.Id" readonly />
 
-                @*Deudor*@
-                <label class="form-label" for="Deudor"><strong>Deudor</strong></label>
-                <InputText id="nombres" class="form-control" @bind-Value="@pretamos.Deudor"></InputText>
-                <ValidationMessage For="@(() => pretamos.Deudor)"></ValidationMessage>
+                <label class="form-label">Deudor</label>
+                <InputSelect @bind-Value="pretamos.DeudorId" class="form-control">
+                    <option value="0">Selecciona el deudor</option>
+                    @foreach (var deudor in Deudores)
+                    {
+                        <option value="@deudor.DeudorId">@deudor.Nombres</option>
+                    }
+                </InputSelect>
 
-                @*Concepto*@
                 <label class="form-label" for="Concepto"><strong>Concepto</strong></label>
-                <InputText id="WhatsApp" class="form-control" @bind-Value="@pretamos.Concepto"></InputText>
-                <ValidationMessage For="@(() => pretamos.Concepto)"></ValidationMessage>  
-                
-                @*Monto*@
+                <InputText id="Concepto" class="form-control" @bind-Value="@pretamos.Concepto" />
+                <ValidationMessage For="@(() => pretamos.Concepto)" />
+
                 <label class="form-label" for="Monto"><strong>Monto</strong></label>
-                <InputNumber id="WhatsApp" class="form-control" @bind-Value="@pretamos.Monto"></InputNumber>
-                <ValidationMessage For="@(() => pretamos.Monto)"></ValidationMessage>
+                <InputNumber id="Monto" class="form-control" @bind-Value="@pretamos.Monto" />
+                <ValidationMessage For="@(() => pretamos.Monto)" />
 
                 <div>
-                    @*footer*@
                     <div class="card-footer">
                         <a type="button" href="/Pretamos/Index" class="btn btn-outline-danger"><span class="bi bi-arrow-bar-left"></span> Volver </a>
                         <button type="submit" class="btn btn-success bi bi-floppy-fill">Guardar</button>
@@ -44,24 +43,22 @@
             </div>
         </div>
     </div>
-
 </EditForm>
-
-
 
 @code {
     public Pretamos pretamos { get; set; } = new Pretamos();
     public List<Pretamos> ListaPretamo { get; set; } = new List<Pretamos>();
+    public List<Deudores> Deudores { get; set; } = new List<Deudores>();
     List<ToastMessage> MensajeToast = new List<ToastMessage>();
 
     private ToastMessage CreateToastMessage(ToastType toastType, string mensaje)
-    => new ToastMessage
-        {
-            Type = toastType,
-            Title = "Notificación",
-            HelpText = $"{DateTime.Now}",
-            Message = mensaje,
-        };
+        => new ToastMessage
+            {
+                Type = toastType,
+                Title = "Notificación",
+                HelpText = $"{DateTime.Now}",
+                Message = mensaje,
+            };
 
     private void Mensaje(ToastType toastType, string mensaje)
     {
@@ -70,15 +67,28 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ListaPretamo = await Servicio.Listar(t => true);
+        try
+        {
+            ListaPretamo = await Servicio.Listar(t => true);
+            Deudores = await DeudorService.Listar(t => true);
+        }
+        catch (Exception ex)
+        {
+            Mensaje(ToastType.Danger, $"Error al cargar datos: {ex.Message}");
+        }
     }
 
     public async Task Crear()
     {
-        var Guardar = await Servicio.Guardar(pretamos);
-        Mensaje(ToastType.Success, "Prestamo guardado correctamente.");
-        return;
+        try
+        {
+            var Guardar = await Servicio.Guardar(pretamos);
+            Mensaje(ToastType.Success, "Prestamo guardado correctamente.");
+            navigation.NavigateTo("/Pretamos/Index");
+        }
+        catch (Exception ex)
+        {
+            Mensaje(ToastType.Danger, $"Error al guardar el préstamo: {ex.Message}");
+        }
     }
-
-    
 }

@@ -1,24 +1,26 @@
 ﻿@page "/Pretamos/Index"
 @rendermode InteractiveServer
 @inject PrestamoService servicio
+@inject DeudorServices DeudorService
 @inject NavigationManager navigation
 
 <PageTitle>Registro Prestamo</PageTitle>
 <div class="container">
     <div class="card shadow-lg">
         <div class="card-header">
-            <h5 class="card-header text-center bg-primary">Registro Pretamo</h5>
+            <h5 class="card-header text-center bg-primary">Registro Prestamo</h5>
         </div>
 
-            <div class="card-body">
-                <div class="col-md-3">
-                <a href=" /Prestamo/Create" class="btn btn-success" type="button"><span class="bi bi-floppy"></span> Crear </a>
-                </div>
+        <div class="card-body">
+            <div class="col-md-3">
+                <a href="/Prestamo/Create" class="btn btn-success" type="button">
+                    <span class="bi bi-floppy"></span> Crear
+                </a>
             </div>
-       
-        @*body*@
+        </div>
+
         <table class="table table-striped-columns table-hover text-center">
-            <thead >
+            <thead>
                 <tr>
                     <th>Id</th>
                     <th>Deudor</th>
@@ -29,39 +31,35 @@
                 </tr>
             </thead>
             <tbody>
-
                 @foreach (var prestamo in ListPretamo)
                 {
+                    // Find the debtor by matching DeudorId
+                    var deudor = Deudor.FirstOrDefault(d => d.DeudorId == prestamo.DeudorId);
                     <tr>
                         <td>@prestamo.Id</td>
-                        <td>@prestamo.Deudor</td>
+                        <td>@(deudor != null ? deudor.Nombres : "N/A")</td>
                         <td>@prestamo.Concepto</td>
                         <td>@prestamo.Monto</td>
                         <td class="text-center">
-                            <a href="/Prestamo/Edit/@prestamo.Id" class="btn bi bi-pencil-square "></a>
+                            <a href="/Prestamo/Edit/@prestamo.Id" class="btn bi bi-pencil-square"></a>
                         </td>
                         <td class="text-center">
-                            <a href="/Prestamo/Delete/@prestamo.Id" class="btn bi bi-trash "></a>
+                            <a href="/Prestamo/Delete/@prestamo.Id" class="btn bi bi-trash"></a>
                         </td>
                     </tr>
                 }
-
-                
-  
             </tbody>
         </table>
     </div>
 </div>
 
 @code {
-    public List<Pretamos> ListPretamo = new List<Pretamos>();
+    public List<Pretamos> ListPretamo { get; set; } = new List<Pretamos>();
+    public List<Deudores> Deudor { get; set; } = new List<Deudores>();
 
     protected override async Task OnInitializedAsync()
     {
         ListPretamo = await servicio.Listar(c => true);
+        Deudor = await DeudorService.Listar(c => true);
     }
-    
-    
-    
-
 }
