@@ -9,4 +9,5 @@ public class Deudores
     [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "No se permiten Numero")]
     public string Nombres {  get; set; }
 
+  
 }
