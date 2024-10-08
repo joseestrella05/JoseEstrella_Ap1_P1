@@ -14,6 +14,7 @@ var ConStr = builder.Configuration.GetConnectionString("ConStr");
 builder.Services.AddDbContext<Contexto>(O => O.UseSqlite(ConStr));
 builder.Services.AddBlazorBootstrap();
 builder.Services.AddScoped<PrestamoService>();
+builder.Services.AddScoped<DeudorServices>();
 
 
 var app = builder.Build();
