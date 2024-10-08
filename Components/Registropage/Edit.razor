@@ -1,6 +1,7 @@
 ﻿@page "/Prestamo/Edit/{Id:int}"
 @rendermode InteractiveServer
 @inject PrestamoService servicio
+@inject DeudorServices DeudorService
 @inject NavigationManager navigation
 
 <PageTitle>Editar Prestamo</PageTitle>
@@ -21,9 +22,14 @@
                 <InputNumber id="id" class="form-control" @bind-Value="@pretamos.Id" readonly></InputNumber>
 
                 @*Deudor*@
-                <label class="form-label" for="Deudor"><strong>Deudor</strong></label>
-                <InputText id="nombres" class="form-control" @bind-Value="@pretamos.Deudor"></InputText>
-                <ValidationMessage For="@(() => pretamos.Deudor)"></ValidationMessage>
+                <label class="form-label">Deudor</label>
+                <InputSelect @bind-Value="pretamos.DeudorId" class="form-control">
+                    <option value="0">Selecciona el deudor</option>
+                    @foreach (var deudor in Deudores)
+                    {
+                        <option value="@deudor.DeudorId">@deudor.Nombres</option>
+                    }
+                </InputSelect>
 
                 @*Concepto*@
                 <label class="form-label" for="Concepto"><strong>Concepto</strong></label>
@@ -51,14 +57,14 @@
     [Parameter]
     public int Id { get; set; }
     public Pretamos pretamos { get; set; } = new Pretamos();
-
-
+    public List<Deudores> Deudores { get; set; } = new List<Deudores>();
 
     protected override async Task OnInitializedAsync()
     {
         if (Id > 0)
         {
             pretamos = await servicio.Buscar(Id);
+            Deudores = await DeudorService.Listar(t => true);
         }
     }
 
