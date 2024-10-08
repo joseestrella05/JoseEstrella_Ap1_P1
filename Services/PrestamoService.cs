@@ -52,14 +52,7 @@ public class PrestamoService{
             .AsNoTracking()
             .FirstOrDefaultAsync(t => t.Id == id);
     }
-
-    public async Task<Pretamos?> BuscarNombre(string Deudor)
-    {
-        return await _context.pretamos
-            .AsNoTracking()
-            .FirstOrDefaultAsync(t => t.Deudor == Deudor);
-    }
-
+   
     public async Task<List<Pretamos>> Listar(Expression<Func<Pretamos, bool>> criterio)
     {
         return await _context.pretamos
