@@ -6,7 +6,7 @@ namespace JoseEstrella_Ap1_P1.Models
     public class Cobros
     {
         [Key]
-        public int cobroId { get; set; }
+        public int CobroId { get; set; }
         [Required(ErrorMessage = "fecha obligatoria")]
         public DateTime Fecha {  get; set; }
         [ForeignKey("Deudores")]
@@ -21,6 +21,10 @@ namespace JoseEstrella_Ap1_P1.Models
 
         [ForeignKey("PrestamoId")]
         public Pretamos pretamos { get; set; }
+       
+        [ForeignKey("CobroId")]
+        public ICollection<CobrosDetalle> CobrosDetalles { get; set; } = new List<CobrosDetalle>();
+
 
     }
 }
