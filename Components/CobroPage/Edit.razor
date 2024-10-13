@@ -28,8 +28,20 @@
 
 				<div>
 					<label class="form-label">Fecha</label>
-					<InputDate class="form-control" @bind-Value="Cobro.Fecha"></InputDate>
+					<InputDate class="form-control" @bind-Value="Cobro.Fecha" readonly></InputDate>
 					<ValidationMessage For="@(() => Cobro.Fecha)" />
+				</div>
+
+				<div class="col md-8">
+					<label class="form-label">Prestamos</label>
+					<InputSelect class="form-select " @bind-Value="NuevoDetalle.PrestamoId">
+						<option value="0">Seleccione una opcion</option>
+						@foreach (var Prestamos in ListPrestamos)
+						{
+							<option value="@Prestamos.PrestamoId">@Prestamos.Concepto</option>
+						}
+					</InputSelect>
+					<ValidationMessage For="@(() => NuevoDetalle.PrestamoId)" />
 				</div>
 
 				<div>
@@ -44,25 +56,15 @@
 							<label class="form-label"><strong>Deudor</strong></label>
 							<InputText class="form-control" @bind-Value="Nombre" readonly></InputText>
 						</div>
-						<div class="col md-8">
-							<label class="form-label">Prestamos</label>
-							<InputSelect class="form-select " @bind-Value="NuevoDetalle.PrestamoId" >
-								<option value="0">Seleccione una opcion</option>
-								@foreach (var Prestamos in ListPrestamos)
-								{
-									<option value="@Prestamos.PrestamoId">@Prestamos.Concepto</option>
-								}
-							</InputSelect>
-							<ValidationMessage For="@(() => NuevoDetalle.PrestamoId)" />
-						</div>
+
 						<div class="col-4">
 							<label class="form-label"><strong>Valor Cobrado</strong></label>
 							<InputNumber class="form-control" @bind-Value="NuevoDetalle.ValorCobrado" ></InputNumber>
 							<ValidationMessage For="@(() => NuevoDetalle.ValorCobrado)" />
 						</div>
-						<div class="row mb-3">
-							<div class="col md-8">
-								<button type="button" class="btn btn-success " @onclick="Agregar">Agregar Detalle</button>
+						<div class="row">
+							<div class="col-4">
+								<button type="button" class="btn btn-success " @onclick="Agregar">Agregar</button>
 							</div>
 						</div>
 					</div>
