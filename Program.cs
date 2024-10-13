@@ -15,6 +15,7 @@ builder.Services.AddDbContext<Contexto>(O => O.UseSqlite(ConStr));
 builder.Services.AddBlazorBootstrap();
 builder.Services.AddScoped<PrestamoService>();
 builder.Services.AddScoped<DeudorServices>();
+builder.Services.AddScoped<CobroServices>();
 
 
 var app = builder.Build();
