@@ -9,9 +9,9 @@ namespace JoseEstrella_Ap1_P1.Models
         public int CobroId { get; set; }
 
         [Required(ErrorMessage = "Campo obligatorio")]
-        public DateTime Fecha { get; set; }
+        public DateTime Fecha { get; set; } = DateTime.Now;
 
-        [Required(ErrorMessage = "Campo obligatorio")]
+		[Required(ErrorMessage = "Campo obligatorio")]
         [Range(1, double.MaxValue)]
         public int Monto { get; set; }
 

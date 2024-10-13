@@ -30,8 +30,20 @@
 
 				<div>
 					<label class="form-label">Fecha</label>
-					<InputDate class="form-control" @bind-Value="Cobro.Fecha"></InputDate>
+					<InputDate class="form-control" @bind-Value="Cobro.Fecha" readonly></InputDate>
 					<ValidationMessage For="@(() => Cobro.Fecha)" />
+				</div>
+
+				<div class="col md-8">
+					<label class="form-label">Prestamos</label>
+					<InputSelect class="form-select " @bind-Value="NuevoDetalle.PrestamoId">
+						<option value="0">Seleccione una opcion</option>
+						@foreach (var Prestamos in ListPrestamos)
+						{
+							<option value="@Prestamos.PrestamoId">@Prestamos.Concepto</option>
+						}
+					</InputSelect>
+					<ValidationMessage For="@(() => NuevoDetalle.PrestamoId)" />
 				</div>
 
 				<div>
@@ -41,32 +53,25 @@
 				</div>
 
 				<div class="border border-success p-3 mt-3">
+					<h4>Registro Destalles</h4>
 					<div class="row">
 						<div class="col-4">
 							<label class="form-label"><strong>Deudor</strong></label>
 							<InputText class="form-control" @bind-Value="Nombre" readonly></InputText>
 						</div>
-						<div class="col md-8">
-							<label class="form-label">Prestamos</label>
-							<InputSelect class="form-select " @bind-Value="NuevoDetalle.PrestamoId" >
-								<option value="0">Seleccione una opcion</option>
-								@foreach (var Prestamos in ListPrestamos)
-								{
-									<option value="@Prestamos.PrestamoId">@Prestamos.Concepto</option>
-								}
-							</InputSelect>
-							<ValidationMessage For="@(() => NuevoDetalle.PrestamoId)" />
-						</div>
+
 						<div class="col-4">
 							<label class="form-label"><strong>Valor Cobrado</strong></label>
 							<InputNumber class="form-control" @bind-Value="NuevoDetalle.ValorCobrado" ></InputNumber>
 							<ValidationMessage For="@(() => NuevoDetalle.ValorCobrado)" />
 						</div>
-						<div class="row-3 col-4">
-							<button type="button" class="btn btn-success " @onclick="Agregar">Agregar Detalle</button>
-							<button type="button" @onclick=" ()=> CambiarMonto(NuevoDetalle.PrestamoId)" class="btn btn-outline-primary bi bi-search"> Actulizar</button>
+
+						<div class ="col-4">
+							<button type="button" class="btn btn-success " @onclick="Agregar">Agregar </button>
 						</div>
 					</div>
+
+
 					<div>
 						<table class="table table-light">
 							<thead class="table table-striped">
@@ -74,19 +79,18 @@
 									<th>Nombre</th>
 									<th>Id prestamo</th>
 									<th>Valor cobrado</th>
-									<th>Eliminar</th>
+									<th>Remover</th>
 								</tr>
 							</thead>
 							<tbody>
 								@foreach (var Detalle in ListDetalles)
 								{
 									<tr class="Text-center">
-										s
 										<th>@Nombre</th>
 										<th>@Detalle.PrestamoId</th>
 										<th>@Detalle.ValorCobrado</th>
 										<th>
-											<button type="button" @onclick=" ()=> Eliminar(Detalle)" class="btn btn-outline-danger bi bi-trash"> Eliminar</button>
+											<button type="button" @onclick=" ()=> Eliminar(Detalle)" class="btn btn-outline-danger bi bi-trash"> Remover</button>
 										</th>
 									</tr>
 								}
@@ -96,9 +100,9 @@
 				</div>
 			</div>
 		</div>
-		<div class="card-footer">
-			<a href="/Cobro/Index" class="btn btn-outline-primary bi bi-arrow-left mt-2">Volver</a>
-			<button type="submit" class="btn btn-outline-success bi bi-floppy mt-2">Guardar</button>
+		<div class="card-footer text-center">
+			<button type="button" class="btn btn-outline-primary ml-2" @onclick="Nuevo"><span class="bi bi-plus"></span> Nuevo </button>
+			<button type="submit" class="btn btn-outline-success bi bi-floppy ml-2">Guardar</button>
 		</div>
 	</div>
 
@@ -113,6 +117,7 @@
 	public List<Prestamos> ListPrestamos { get; set; } = new List<Prestamos>();
 	public string? Nombre { get; set; }
 	List<ToastMessage> MensajeToast = new List<ToastMessage>();
+	private bool Existe = false;
 
 	private ToastMessage CreateToastMessage(ToastType toastType, string mensaje)
 		=> new ToastMessage
@@ -134,6 +139,14 @@
 	{
 		ListDeudores = await DeudorService.Listar(d => true);
 	}
+
+	public void Nuevo()
+	{
+		NuevoDetalle = new CobrosDetalles();
+		Existe = false;
+	}
+
+
 
 	public async Task Agregar()
 	{
@@ -158,15 +171,6 @@
 		ListDetalles.Add(NuevoDetalle);
 		NuevoDetalle = new CobrosDetalles();
 		Mensaje(ToastType.Success, "Se agrego el nuevo detalle Correctamente");
-	}
-
-	public async Task CambiarMonto(int id)
-	{
-		var prestamoDetalle = await PrestamosService.Buscar(id);
-		if (prestamoDetalle != null)
-		{
-			Cobro.Monto = prestamoDetalle.Monto;
-		}
 	}
 
 	public async Task Buscar()
