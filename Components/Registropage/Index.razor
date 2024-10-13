@@ -1,24 +1,47 @@
 ﻿@page "/Pretamos/Index"
 @rendermode InteractiveServer
 @inject PrestamoService servicio
+@inject DeudorServices DeudorService
 @inject NavigationManager navigation
 
 <PageTitle>Registro Prestamo</PageTitle>
 <div class="container">
     <div class="card shadow-lg">
         <div class="card-header">
-            <h5 class="card-header text-center bg-primary">Registro Pretamo</h5>
+            <h5 class="card-header"> Registro Prestamo</h5>
         </div>
 
-            <div class="card-body">
-                <div class="col-md-3">
-                <a href=" /Prestamo/Create" class="btn btn-success" type="button"><span class="bi bi-floppy"></span> Crear </a>
+        <div class="row p-3">
+            <div class="col-md-5">
+                <label for="Filtro" class="form-label"><strong>Filtrar por:</strong></label>
+                <InputSelect id="filtro" class="form-select" @bind-Value="filtro">
+                    <option value="" disabled>Seleccionar</option>
+                    <option value="id">PrestamoId</option>
+                    <option value="Deudor">Deudor</option>
+                    <option value="Concepto">Concepto</option>
+                    <option value="Monto">Monto</option>
+                </InputSelect>
+            </div>
+
+            <div class="col-md-7">
+                <label for="ValorFiltro" class="form-label"><strong>B&uacute;squeda:</strong></label>
+                <div class="input-group">
+                    <input @bind="valorFiltro" class="form-control" placeholder="Buscar" />
+                    <button @onclick="Buscar" class="btn btn-primary" type="button">
+                        <span class="bi bi-search"></span> Buscar
+                    </button>
                 </div>
             </div>
-       
-        @*body*@
+
+            <div class="col-md-3">
+                <a href="/Prestamo/Create" class="btn btn-success" type="button">
+                    <span class="bi bi-floppy"></span> Crear
+                </a>
+            </div>
+        </div>
+
         <table class="table table-striped-columns table-hover text-center">
-            <thead >
+            <thead>
                 <tr>
                     <th>Id</th>
                     <th>Deudor</th>
@@ -29,38 +52,68 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    @foreach (var prestamo in ListPretamo)
-                    {
-                        <td>@prestamo.Id</td>
-                        <td>@prestamo.Deudor</td>
-                        <td>@prestamo.Concepto</td>
-                        <td>@prestamo.Monto</td>
+                @foreach (var Prestamo in ListPretamo)
+                {
+                    <tr>
+                        <th>@Prestamo.PrestamoId</th>
+                        <th>@Prestamo.Deudor?.Nombres</th>
+                        <th>@Prestamo.Concepto</th>
+                        <th>@Prestamo.Monto $</th>
+                        
                         <td class="text-center">
-                            <a href="/Prestamo/Edit/@prestamo.Id" class="btn btn-success bi bi-pencil-square ">Modificar</a>
+                            <a href="/Prestamos/Edit/@Prestamo.PrestamoId" class="btn btn-outline bi bi-pencil-square"></a>
                         </td>
                         <td class="text-center">
-                            <a href="/Prestamo/Delete/@prestamo.Id" class="btn btn-danger bi bi-trash ">Eliminar</a>
+                            <a href="/Prestamos/Delete/@Prestamo.PrestamoId" class="btn btn-outline bi bi-trash"></a>
                         </td>
-                    }
 
-                </tr>
-  
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
 </div>
 
 @code {
-    public List<Pretamos> ListPretamo = new List<Pretamos>();
+    public List<Prestamos> ListPretamo { get; set; } = new List<Prestamos>();
+    public List<Deudores> Deudor { get; set; } = new List<Deudores>();
+    private string filtro = "";
+    private string valorFiltro = "";
 
     protected override async Task OnInitializedAsync()
     {
         ListPretamo = await servicio.Listar(c => true);
+        Deudor = await DeudorService.Listar(c => true);
     }
-    
-        
 
-    
+    private async Task Buscar()
+    {
+        if (!string.IsNullOrWhiteSpace(valorFiltro))
+        {
+            if (filtro == "id" && int.TryParse(valorFiltro, out int prestamoId))
+            {
+                ListPretamo = await servicio.Listar(p => p.PrestamoId == prestamoId);
+            }
+            else if (filtro == "Deudor")
+            {
+                var deudoresFiltrados = Deudor
+                .Where(d => d.Nombres.Contains(valorFiltro, StringComparison.OrdinalIgnoreCase))
+                .Select(d => d.DeudoresId)
+                .ToList();
+
+                ListPretamo = await servicio.Listar(p => deudoresFiltrados.Contains(p.DeudorId));
+            }
+
+            else if (filtro == "Concepto")
+            {
+                ListPretamo = ListPretamo.Where(t => t.Concepto.Contains(valorFiltro, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+
+        }
+        else
+        {
+            ListPretamo = await servicio.Listar(p => true);
+        }
+    }
 
 }
