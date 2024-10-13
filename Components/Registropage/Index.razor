@@ -8,7 +8,7 @@
 <div class="container">
     <div class="card shadow-lg">
         <div class="card-header">
-            <h5 class="card-header text-center bg-primary">Registro Prestamo</h5>
+            <h5 class="card-header"> Registro Prestamo</h5>
         </div>
 
         <div class="row p-3">
@@ -52,20 +52,21 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var prestamo in ListPretamo)
+                @foreach (var Prestamo in ListPretamo)
                 {
-                    var deudor = Deudor.FirstOrDefault(d => d.DeudorId == prestamo.DeudorId);
                     <tr>
-                        <td>@prestamo.Id</td>
-                        <td>@(deudor != null ? deudor.Nombres : "N/A")</td>
-                        <td>@prestamo.Concepto</td>
-                        <td>@prestamo.Monto</td>
+                        <th>@Prestamo.PrestamoId</th>
+                        <th>@Prestamo.Deudor?.Nombres</th>
+                        <th>@Prestamo.Concepto</th>
+                        <th>@Prestamo.Monto $</th>
+                        
                         <td class="text-center">
-                            <a href="/Prestamo/Edit/@prestamo.Id" class="btn bi bi-pencil-square"></a>
+                            <a href="/Prestamos/Edit/@Prestamo.PrestamoId" class="btn btn-outline bi bi-pencil-square"></a>
                         </td>
                         <td class="text-center">
-                            <a href="/Prestamo/Delete/@prestamo.Id" class="btn bi bi-trash"></a>
+                            <a href="/Prestamos/Delete/@Prestamo.PrestamoId" class="btn btn-outline bi bi-trash"></a>
                         </td>
+
                     </tr>
                 }
             </tbody>
@@ -74,7 +75,7 @@
 </div>
 
 @code {
-    public List<Pretamos> ListPretamo { get; set; } = new List<Pretamos>();
+    public List<Prestamos> ListPretamo { get; set; } = new List<Prestamos>();
     public List<Deudores> Deudor { get; set; } = new List<Deudores>();
     private string filtro = "";
     private string valorFiltro = "";
@@ -91,13 +92,13 @@
         {
             if (filtro == "id" && int.TryParse(valorFiltro, out int prestamoId))
             {
-                ListPretamo = await servicio.Listar(p => p.Id == prestamoId);
+                ListPretamo = await servicio.Listar(p => p.PrestamoId == prestamoId);
             }
             else if (filtro == "Deudor")
             {
                 var deudoresFiltrados = Deudor
                 .Where(d => d.Nombres.Contains(valorFiltro, StringComparison.OrdinalIgnoreCase))
-                .Select(d => d.DeudorId)
+                .Select(d => d.DeudoresId)
                 .ToList();
 
                 ListPretamo = await servicio.Listar(p => deudoresFiltrados.Contains(p.DeudorId));

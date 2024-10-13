@@ -19,7 +19,7 @@
             <div class="card-body">
                 @*Id*@
                 <label class="form-label" for="Id"><strong>Id</strong></label>
-                <InputNumber id="id" class="form-control" @bind-Value="@pretamos.Id" readonly></InputNumber>
+                <InputNumber id="id" class="form-control" @bind-Value="@pretamos.PrestamoId" readonly></InputNumber>
 
                 @*Deudor*@
                 <label class="form-label">Deudor</label>
@@ -27,7 +27,7 @@
                     <option value="0">Selecciona el deudor</option>
                     @foreach (var deudor in Deudores)
                     {
-                        <option value="@deudor.DeudorId">@deudor.Nombres</option>
+                        <option value="@deudor.DeudoresId">@deudor.Nombres</option>
                     }
                 </InputSelect>
 
@@ -56,7 +56,7 @@
 @code {
     [Parameter]
     public int Id { get; set; }
-    public Pretamos pretamos { get; set; } = new Pretamos();
+    public Prestamos pretamos { get; set; } = new Prestamos();
     public List<Deudores> Deudores { get; set; } = new List<Deudores>();
 
     protected override async Task OnInitializedAsync()

@@ -6,78 +6,40 @@
 
 <PageTitle>Eliminar Prestamo</PageTitle>
 
-@if (pretamos != null)
-{
-    var deudor = Deudor.FirstOrDefault(d => d.DeudorId == pretamos.DeudorId);
+<div class="container">
+	<div class="card shadow-lg">
 
-    <div class="card-header bg-primary text-white text-center">
-        <h3><strong>Eliminar Prestamo</strong></h3>
-    </div>
-    <div class="container">
-        <div class="card shadow-lg">
-           
-            <div class="card-body">
-                <h5><strong>¿Estás seguro de que quieres eliminar este prestamo?</strong></h5>
-                <div class="mb-1">
-                    <p class="mb-0">Id: @pretamos.Id</p>
-                </div>
-                <div class="mb-1">
-                    <p class="mb-0">Deudor: @(deudor != null ? deudor.Nombres : "No encontrado")</p>
-                </div>
-                <div class="mb-1">
-                    <p class="mb-0">Concepto: @pretamos.Concepto</p>
-                </div>
-                <div class="mb-1">
-                    <p class="mb-0">Monto: @pretamos.Monto</p>
-                </div>
-            </div>
-            
-            <div class="card-footer">
-                <a type="button" href="/Pretamos/Index" class="btn btn-outline-danger">
-                    <span class="bi bi-arrow-bar-left"></span> Volver
-                </a>
-                <button type="button" class="btn btn-danger bi bi-trash-fill" @onclick="Eliminar">Eliminar</button>
-            </div>
-        </div>
-    </div>
-}
-else
-{
-    <p>No se encontró ningún prestamo con ese ID</p>
-}
+		<div class="card-header">
+			<h2 class="card-title">Eliminar prestamos</h2>
+		</div>
+		<div class="card-body">
+			<ul>
+				<li>Id: @Prestamo.PrestamoId</li>
+				<li>Nombre: @Prestamo.Deudor?.Nombres</li>
+				<li>Concepto: @Prestamo.Concepto</li>
+				<li>Deuda: @Prestamo.Monto</li>
+			</ul>
+		</div>
+		<div class="card-footer">
+			<a href="/Registro/Index" class="btn btn-outline-primary bi bi-arrow-left">Volver</a>
+			<button type="button" @onclick="Eliminar" class="btn btn-outline-danger"> Eliminar</button>
+		</div>
+	</div>
 
-<div>@Mensaje</div>
-
+</div>
 @code {
-    [Parameter]
-    public int Id { get; set; }
-    public Pretamos pretamos { get; set; }
-    public List<Deudores> Deudor { get; set; } = new List<Deudores>();
-    public string Mensaje = string.Empty;
+	[Parameter]
+	public int DeudorId { get; set; }
+	public Prestamos Prestamo { get; set; } = new Prestamos();
 
-    protected override async Task OnInitializedAsync()
-    {
-        if (Id > 0)
-        {
-            pretamos = await servicio.Buscar(Id);
-            Deudor = await DeudorService.Listar(c => true); 
-        }
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		Prestamo = await servicio.Buscar(DeudorId);
+	}
 
-    public async Task Eliminar()
-    {
-        if (pretamos != null)
-        {
-            var eliminar = await servicio.Eliminar(Id);
-            if (eliminar)
-            {
-                Mensaje = "El prestamo ha sido eliminado.";
-                navigation.NavigateTo("/Prestamos/Index");
-            }
-            else
-            {
-                Mensaje = "Error, no se pudo eliminar el prestamo.";
-            }
-        }
-    }
+	public async Task Eliminar()
+	{
+		await servicio.Delete(Prestamo.DeudorId);
+		navigation.NavigateTo("/Registro/Index");
+	}
 }

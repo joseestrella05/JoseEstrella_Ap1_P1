@@ -15,14 +15,14 @@
             </div>
             <div class="card-body">
                 <label class="form-label" for="Id"><strong>Id</strong></label>
-                <InputNumber id="id" class="form-control" @bind-Value="@pretamos.Id" readonly />
+                <InputNumber id="id" class="form-control" @bind-Value="@pretamos.PrestamoId" readonly />
 
                 <label class="form-label">Deudor</label>
                 <InputSelect @bind-Value="pretamos.DeudorId" class="form-control">
                     <option value="0">Selecciona el deudor</option>
                     @foreach (var deudor in Deudores)
                     {
-                        <option value="@deudor.DeudorId">@deudor.Nombres</option>
+                        <option value="@deudor.DeudoresId">@deudor.Nombres</option>
                     }
                 </InputSelect>
 
@@ -46,8 +46,8 @@
 </EditForm>
 
 @code {
-    public Pretamos pretamos { get; set; } = new Pretamos();
-    public List<Pretamos> ListaPretamo { get; set; } = new List<Pretamos>();
+    public Prestamos pretamos { get; set; } = new Prestamos();
+    public List<Prestamos> ListaPretamo { get; set; } = new List<Prestamos>();
     public List<Deudores> Deudores { get; set; } = new List<Deudores>();
     List<ToastMessage> MensajeToast = new List<ToastMessage>();
 
