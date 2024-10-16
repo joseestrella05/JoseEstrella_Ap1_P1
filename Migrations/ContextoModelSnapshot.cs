@@ -26,20 +26,25 @@ namespace JoseEstrella_Ap1_P1.Migrations
                     b.Property<int>("DeudorId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("DeudoresId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Monto")
-                        .HasColumnType("INTEGER");
+                    b.Property<double>("Monto")
+                        .HasColumnType("REAL");
 
                     b.HasKey("CobroId");
+
+                    b.HasIndex("DeudoresId");
 
                     b.ToTable("Cobros");
                 });
 
             modelBuilder.Entity("JoseEstrella_Ap1_P1.Models.CobrosDetalles", b =>
                 {
-                    b.Property<int>("DetallId")
+                    b.Property<int>("DetalleId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -49,11 +54,10 @@ namespace JoseEstrella_Ap1_P1.Migrations
                     b.Property<int>("PrestamoId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double?>("ValorCobrado")
-                        .IsRequired()
+                    b.Property<double>("ValorCobrado")
                         .HasColumnType("REAL");
 
-                    b.HasKey("DetallId");
+                    b.HasKey("DetalleId");
 
                     b.HasIndex("CobroId");
 
@@ -88,8 +92,8 @@ namespace JoseEstrella_Ap1_P1.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Balance")
-                        .HasColumnType("INTEGER");
+                    b.Property<double>("Balance")
+                        .HasColumnType("REAL");
 
                     b.Property<string>("Concepto")
                         .IsRequired()
@@ -99,14 +103,25 @@ namespace JoseEstrella_Ap1_P1.Migrations
                     b.Property<int>("DeudorId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Monto")
-                        .HasColumnType("INTEGER");
+                    b.Property<double>("Monto")
+                        .HasColumnType("REAL");
 
                     b.HasKey("PrestamoId");
 
                     b.HasIndex("DeudorId");
 
                     b.ToTable("Prestamos");
+                });
+
+            modelBuilder.Entity("JoseEstrella_Ap1_P1.Models.Cobros", b =>
+                {
+                    b.HasOne("JoseEstrella_Ap1_P1.Models.Deudores", "Deudor")
+                        .WithMany()
+                        .HasForeignKey("DeudoresId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Deudor");
                 });
 
             modelBuilder.Entity("JoseEstrella_Ap1_P1.Models.CobrosDetalles", b =>

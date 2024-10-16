@@ -31,6 +31,7 @@
 	[Parameter]
 	public int DeudorId { get; set; }
 	public Prestamos Prestamo { get; set; } = new Prestamos();
+	public string Mensaje { get; set; } = string.Empty;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -39,7 +40,16 @@
 
 	public async Task Eliminar()
 	{
-		await servicio.Delete(Prestamo.DeudorId);
-		navigation.NavigateTo("/Registro/Index");
+		var eliminado = await servicio.Eliminar(Prestamo.PrestamoId);
+
+		if (eliminado)
+		{
+			Mensaje = "Se elimino correctamente";
+			navigation.NavigateTo("/Prestamo/Index");
+		}
+		else
+		{
+			Mensaje = "No se ha eliminado correctamente";
+		}
 	}
 }

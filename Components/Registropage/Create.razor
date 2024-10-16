@@ -69,7 +69,6 @@
     {
         try
         {
-            ListaPretamo = await Servicio.Listar(t => true);
             Deudores = await DeudorService.Listar(t => true);
         }
         catch (Exception ex)

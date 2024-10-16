@@ -12,21 +12,6 @@ namespace JoseEstrella_Ap1_P1.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Cobros",
-                columns: table => new
-                {
-                    CobroId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Fecha = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Monto = table.Column<int>(type: "INTEGER", nullable: false),
-                    DeudorId = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Cobros", x => x.CobroId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Deudores",
                 columns: table => new
                 {
@@ -40,23 +25,24 @@ namespace JoseEstrella_Ap1_P1.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CobrosDetalles",
+                name: "Cobros",
                 columns: table => new
                 {
-                    DetallId = table.Column<int>(type: "INTEGER", nullable: false)
+                    CobroId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    CobroId = table.Column<int>(type: "INTEGER", nullable: false),
-                    PrestamoId = table.Column<int>(type: "INTEGER", nullable: false),
-                    ValorCobrado = table.Column<double>(type: "REAL", nullable: false)
+                    Fecha = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Monto = table.Column<double>(type: "REAL", nullable: false),
+                    DeudorId = table.Column<int>(type: "INTEGER", nullable: false),
+                    DeudoresId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CobrosDetalles", x => x.DetallId);
+                    table.PrimaryKey("PK_Cobros", x => x.CobroId);
                     table.ForeignKey(
-                        name: "FK_CobrosDetalles_Cobros_CobroId",
-                        column: x => x.CobroId,
-                        principalTable: "Cobros",
-                        principalColumn: "CobroId",
+                        name: "FK_Cobros_Deudores_DeudoresId",
+                        column: x => x.DeudoresId,
+                        principalTable: "Deudores",
+                        principalColumn: "DeudoresId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -67,8 +53,8 @@ namespace JoseEstrella_Ap1_P1.Migrations
                     PrestamoId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Concepto = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    Balance = table.Column<int>(type: "INTEGER", nullable: false),
-                    Monto = table.Column<int>(type: "INTEGER", nullable: false),
+                    Balance = table.Column<double>(type: "REAL", nullable: false),
+                    Monto = table.Column<double>(type: "REAL", nullable: false),
                     DeudorId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
@@ -82,10 +68,36 @@ namespace JoseEstrella_Ap1_P1.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "CobrosDetalles",
+                columns: table => new
+                {
+                    DetalleId = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    CobroId = table.Column<int>(type: "INTEGER", nullable: false),
+                    PrestamoId = table.Column<int>(type: "INTEGER", nullable: false),
+                    ValorCobrado = table.Column<double>(type: "REAL", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CobrosDetalles", x => x.DetalleId);
+                    table.ForeignKey(
+                        name: "FK_CobrosDetalles_Cobros_CobroId",
+                        column: x => x.CobroId,
+                        principalTable: "Cobros",
+                        principalColumn: "CobroId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "Deudores",
                 columns: new[] { "DeudoresId", "Nombres" },
                 values: new object[] { 1, "Reyphill Nuñez" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cobros_DeudoresId",
+                table: "Cobros",
+                column: "DeudoresId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CobrosDetalles_CobroId",

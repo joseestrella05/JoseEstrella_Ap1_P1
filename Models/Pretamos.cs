@@ -12,10 +12,10 @@ public class Prestamos
     [StringLength(100)]
     [RegularExpression("^[a-zA-ZÀ-ÿ\\s]+$", ErrorMessage = "Solo se permiten letras.")]
     public string? Concepto { get; set; }
-    public int Balance { get; set; }
+    public double Balance { get; set; }
     [Required(ErrorMessage = " Campo obligatorio")]
     [Range(1, double.MaxValue)]
-    public int Monto { get; set; }
+    public double Monto { get; set; }
     [ForeignKey("Deudor")]
     [Required(ErrorMessage = "Debe seleccionar un tipo")]
     public int DeudorId { get; set; }
