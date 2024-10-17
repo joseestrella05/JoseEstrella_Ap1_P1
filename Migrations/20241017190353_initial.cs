@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace JoseEstrella_Ap1_P1.Migrations
 {
     /// <inheritdoc />
@@ -15,34 +17,33 @@ namespace JoseEstrella_Ap1_P1.Migrations
                 name: "Deudores",
                 columns: table => new
                 {
-                    DeudoresId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Nombres = table.Column<string>(type: "TEXT", nullable: false)
+                    DeudorId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombres = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Deudores", x => x.DeudoresId);
+                    table.PrimaryKey("PK_Deudores", x => x.DeudorId);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Cobros",
                 columns: table => new
                 {
-                    CobroId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Fecha = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Monto = table.Column<double>(type: "REAL", nullable: false),
-                    DeudorId = table.Column<int>(type: "INTEGER", nullable: false),
-                    DeudoresId = table.Column<int>(type: "INTEGER", nullable: false)
+                    CobroId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Monto = table.Column<double>(type: "float", nullable: false),
+                    DeudorId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Cobros", x => x.CobroId);
                     table.ForeignKey(
-                        name: "FK_Cobros_Deudores_DeudoresId",
-                        column: x => x.DeudoresId,
+                        name: "FK_Cobros_Deudores_DeudorId",
+                        column: x => x.DeudorId,
                         principalTable: "Deudores",
-                        principalColumn: "DeudoresId",
+                        principalColumn: "DeudorId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -50,12 +51,12 @@ namespace JoseEstrella_Ap1_P1.Migrations
                 name: "Prestamos",
                 columns: table => new
                 {
-                    PrestamoId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Concepto = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    Balance = table.Column<double>(type: "REAL", nullable: false),
-                    Monto = table.Column<double>(type: "REAL", nullable: false),
-                    DeudorId = table.Column<int>(type: "INTEGER", nullable: false)
+                    PrestamoId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Concepto = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Balance = table.Column<double>(type: "float", nullable: false),
+                    Monto = table.Column<double>(type: "float", nullable: false),
+                    DeudorId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -64,7 +65,7 @@ namespace JoseEstrella_Ap1_P1.Migrations
                         name: "FK_Prestamos_Deudores_DeudorId",
                         column: x => x.DeudorId,
                         principalTable: "Deudores",
-                        principalColumn: "DeudoresId",
+                        principalColumn: "DeudorId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -72,11 +73,11 @@ namespace JoseEstrella_Ap1_P1.Migrations
                 name: "CobrosDetalles",
                 columns: table => new
                 {
-                    DetalleId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    CobroId = table.Column<int>(type: "INTEGER", nullable: false),
-                    PrestamoId = table.Column<int>(type: "INTEGER", nullable: false),
-                    ValorCobrado = table.Column<double>(type: "REAL", nullable: false)
+                    DetalleId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CobroId = table.Column<int>(type: "int", nullable: false),
+                    PrestamoId = table.Column<int>(type: "int", nullable: false),
+                    ValorCobrado = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -91,13 +92,17 @@ namespace JoseEstrella_Ap1_P1.Migrations
 
             migrationBuilder.InsertData(
                 table: "Deudores",
-                columns: new[] { "DeudoresId", "Nombres" },
-                values: new object[] { 1, "Reyphill Nuñez" });
+                columns: new[] { "DeudorId", "Nombres" },
+                values: new object[,]
+                {
+                    { 1, "Jose Lopez" },
+                    { 2, "Maria Perez" }
+                });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Cobros_DeudoresId",
+                name: "IX_Cobros_DeudorId",
                 table: "Cobros",
-                column: "DeudoresId");
+                column: "DeudorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CobrosDetalles_CobroId",

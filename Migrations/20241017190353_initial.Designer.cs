@@ -3,6 +3,7 @@ using System;
 using JoseEstrella_Ap1_P1.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
@@ -11,36 +12,39 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JoseEstrella_Ap1_P1.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20241016000605_initial")]
+    [Migration("20241017190353_initial")]
     partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.8");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("JoseEstrella_Ap1_P1.Models.Cobros", b =>
                 {
                     b.Property<int>("CobroId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CobroId"));
 
                     b.Property<int>("DeudorId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("DeudoresId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("Fecha")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<double>("Monto")
-                        .HasColumnType("REAL");
+                        .HasColumnType("float");
 
                     b.HasKey("CobroId");
 
-                    b.HasIndex("DeudoresId");
+                    b.HasIndex("DeudorId");
 
                     b.ToTable("Cobros");
                 });
@@ -49,16 +53,18 @@ namespace JoseEstrella_Ap1_P1.Migrations
                 {
                     b.Property<int>("DetalleId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DetalleId"));
 
                     b.Property<int>("CobroId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<int>("PrestamoId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<double>("ValorCobrado")
-                        .HasColumnType("REAL");
+                        .HasColumnType("float");
 
                     b.HasKey("DetalleId");
 
@@ -69,23 +75,29 @@ namespace JoseEstrella_Ap1_P1.Migrations
 
             modelBuilder.Entity("JoseEstrella_Ap1_P1.Models.Deudores", b =>
                 {
-                    b.Property<int>("DeudoresId")
+                    b.Property<int>("DeudorId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DeudorId"));
 
                     b.Property<string>("Nombres")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("DeudoresId");
+                    b.HasKey("DeudorId");
 
                     b.ToTable("Deudores");
 
                     b.HasData(
                         new
                         {
-                            DeudoresId = 1,
-                            Nombres = "Reyphill Nuñez"
+                            DeudorId = 1,
+                            Nombres = "Jose Lopez"
+                        },
+                        new
+                        {
+                            DeudorId = 2,
+                            Nombres = "Maria Perez"
                         });
                 });
 
@@ -93,21 +105,23 @@ namespace JoseEstrella_Ap1_P1.Migrations
                 {
                     b.Property<int>("PrestamoId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PrestamoId"));
 
                     b.Property<double>("Balance")
-                        .HasColumnType("REAL");
+                        .HasColumnType("float");
 
                     b.Property<string>("Concepto")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("DeudorId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<double>("Monto")
-                        .HasColumnType("REAL");
+                        .HasColumnType("float");
 
                     b.HasKey("PrestamoId");
 
@@ -119,8 +133,8 @@ namespace JoseEstrella_Ap1_P1.Migrations
             modelBuilder.Entity("JoseEstrella_Ap1_P1.Models.Cobros", b =>
                 {
                     b.HasOne("JoseEstrella_Ap1_P1.Models.Deudores", "Deudor")
-                        .WithMany()
-                        .HasForeignKey("DeudoresId")
+                        .WithMany("Cobros")
+                        .HasForeignKey("DeudorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -129,17 +143,19 @@ namespace JoseEstrella_Ap1_P1.Migrations
 
             modelBuilder.Entity("JoseEstrella_Ap1_P1.Models.CobrosDetalles", b =>
                 {
-                    b.HasOne("JoseEstrella_Ap1_P1.Models.Cobros", null)
-                        .WithMany("CobrosDetalles")
+                    b.HasOne("JoseEstrella_Ap1_P1.Models.Cobros", "Cobro")
+                        .WithMany("CobrosDetalle")
                         .HasForeignKey("CobroId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Cobro");
                 });
 
             modelBuilder.Entity("JoseEstrella_Ap1_P1.Models.Prestamos", b =>
                 {
                     b.HasOne("JoseEstrella_Ap1_P1.Models.Deudores", "Deudor")
-                        .WithMany()
+                        .WithMany("Prestamos")
                         .HasForeignKey("DeudorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -149,7 +165,14 @@ namespace JoseEstrella_Ap1_P1.Migrations
 
             modelBuilder.Entity("JoseEstrella_Ap1_P1.Models.Cobros", b =>
                 {
-                    b.Navigation("CobrosDetalles");
+                    b.Navigation("CobrosDetalle");
+                });
+
+            modelBuilder.Entity("JoseEstrella_Ap1_P1.Models.Deudores", b =>
+                {
+                    b.Navigation("Cobros");
+
+                    b.Navigation("Prestamos");
                 });
 #pragma warning restore 612, 618
         }

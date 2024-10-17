@@ -11,13 +11,16 @@ public class Prestamos
     [Required(ErrorMessage = " Campo obligatorio")]
     [StringLength(100)]
     [RegularExpression("^[a-zA-ZÀ-ÿ\\s]+$", ErrorMessage = "Solo se permiten letras.")]
-    public string? Concepto { get; set; }
+    public string Concepto { get; set; } = null!;
     public double Balance { get; set; }
     [Required(ErrorMessage = " Campo obligatorio")]
     [Range(1, double.MaxValue)]
     public double Monto { get; set; }
-    [ForeignKey("Deudor")]
-    [Required(ErrorMessage = "Debe seleccionar un tipo")]
+
+    [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar un deudor válido")]
     public int DeudorId { get; set; }
-    public Deudores? Deudor { get; set; }
+
+    [ForeignKey("DeudorId")]
+    [InverseProperty("Prestamos")]
+    public virtual Deudores Deudor { get; set; } = null!;
 }

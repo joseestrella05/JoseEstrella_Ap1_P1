@@ -1,21 +1,20 @@
 ﻿@page "/Cobro/Index"
+@rendermode InteractiveServer
 @inject CobroServices cobroService
 @inject NavigationManager navigationManager
-@rendermode InteractiveServer
 
 <PageTitle>Index</PageTitle>
 <div class="container">
     <div class="card shadow-lg">
         <div class="card-header space-between">
             <h5 class="card-title">Registro Cobros</h5>
-            <a href="/Cobros/Create" class="btn btn-primary"> <span class="bi bi-plus-square mt-3"></span> Crear</a>
+                <a href="/Cobros/Create" class="btn btn-primary"> <span class="bi bi-plus-square mt-3"></span> Crear</a>
+            
         </div>
 
         <div class="card-body">
-
             @*labels*@
             <div class="row">
-
                 @*Filtrar por*@
                 <div class="col-3">
                     <label class="col-form-label"><strong>Filtrar por</strong></label>
@@ -46,42 +45,47 @@
                 </div>
             </div>
 
-            <table class="table table-hover">
+            <table class="table table-hover table-bordered text-center">
                 <thead class="table  table-striped text-black">
                     <tr>
-                        <th><strong>CobroId</strong></th>
-                        <th><strong>Fecha</strong></th>
-                        <th><strong>Deudor</strong></th>
-                        <th><strong>Monto</strong></th>
-                        <th><strong>Editar</strong></th>
-                        <th><strong>ELiminar</strong></th>
-
+                        <th>CobroId</th>
+                        <th>Fecha</th>
+                        <th>Deudor</th>
+                        <th>Monto</th>
+                        <th>Ver</th>
+                        <th>Modificar</th>
+                        <th>Eliminar</th>
                     </tr>
                 </thead>
-                <tbody class="text-center">
+                <tbody>
                     @foreach (var cobro in ListaCobros)
                     {
-                        <tr>
-                            <td> @cobro.CobroId</td>
-                            <td> @cobro.Fecha</td>
-                            <td> @cobro.Deudor.Nombres</td>
-                            <td> @cobro.Monto</td>
-
-                            <td class="text-center">
-                                <a href="/Cobro/Edit/@cobro.CobroId" class="btn btn-outline-primary bi bi-pencil-square"></a>
-                                <a href="/Cobro/Delete/@cobro.CobroId" class="btn btn-outline-danger bi bi-trash"></a>
-                            </td>
-                        </tr>
+                            <tr>
+                                <td>@cobro.CobroId</td>
+                                <td>@cobro.Fecha</td>
+                                <td>@cobro.Deudor.Nombres</td>
+                                <td>@cobro.Monto</td>
+                                <td class="text-center">
+                                    <a href="/Cobro/Details/@cobro.CobroId" class="btn btn-outline-primary bi bi-eye "></a>
+                                </td>
+                                <td class="text-center">
+                                    <a href="/Cobro/Edit/@cobro.CobroId" class="btn btn-outline-primary bi bi-pencil-square"></a>
+                                </td>
+                                <td class="text-center">
+                                    <a href="/Cobro/Delete/@cobro.CobroId" class="btn btn-outline-danger bi bi-trash"></a>
+                                </td>
+                            </tr>
                     }
                 </tbody>
             </table>
         </div>
         <div class="card-footer space-between">
-            <label>Cantidad:  @ListaCobros.Count()</label>
-            <label>Total:  @ListaCobros.Sum(p => p.Monto)</label>
+            <label>Cantidad: @ListaCobros.Count()</label>
+            <label>Total: @ListaCobros.Sum(p => p.Monto)</label>
         </div>
     </div>
 </div>
+
 
 @code {
     public List<Cobros> ListaCobros { get; set; } = new List<Cobros>();
@@ -113,3 +117,6 @@
         ValorFiltro = string.Empty;
     }
 }
+
+
+

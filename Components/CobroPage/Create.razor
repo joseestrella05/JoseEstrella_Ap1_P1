@@ -39,7 +39,7 @@
                             <option value="0" selected disabled>Elija una opción</option>
                             @foreach (var deudor in ListaDeudores)
                             {
-                                <option value="@deudor.DeudoresId">@deudor.Nombres</option>
+                                <option value="@deudor.DeudorId">@deudor.Nombres</option>
                             }
                         </InputSelect>
                         <button type="button" class="btn btn-outline-success bi bi-arrow-clockwise"
@@ -70,7 +70,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var detalle in Cobro.CobrosDetalles)
+                            @foreach (var detalle in Cobro.CobrosDetalle)
                             {
                             <th>@detalle.PrestamoId</th>
                             <th>@detalle.ValorCobrado</th>
@@ -147,8 +147,8 @@
                 ValorCobrado = selection.valor
             };
 
-        Cobro.CobrosDetalles.Add(detalle);
-        Cobro.Monto = Cobro.CobrosDetalles.Sum(d => d.ValorCobrado);
+        Cobro.CobrosDetalle.Add(detalle);
+        Cobro.Monto = Cobro.CobrosDetalle.Sum(d => d.ValorCobrado);
 
         DetalleSeleccionado = new CobrosDetalles();
         await Task.CompletedTask;
@@ -179,7 +179,7 @@
 
     public void RemoverDetalle(CobrosDetalles detalle)
     {
-        Cobro.CobrosDetalles.Remove(detalle);
+        Cobro.CobrosDetalle.Remove(detalle);
         DetalleSeleccionado = detalle;
     }
 }

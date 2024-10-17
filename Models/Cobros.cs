@@ -19,12 +19,12 @@ namespace JoseEstrella_Ap1_P1.Models
         [Range(1, double.MaxValue, ErrorMessage = "Debe selecionar un deudor valido")]
         public int DeudorId { get; set; }
 
-        [ForeignKey("DeudoresId")]
-		public virtual Deudores Deudor { get; set; } = null!;
+        [InverseProperty("Cobro")]
+        public virtual ICollection<CobrosDetalles> CobrosDetalle { get; set; } = new List<CobrosDetalles>();
 
-		[ForeignKey("CobroId")]
-        public ICollection<CobrosDetalles> CobrosDetalles { get; set; } = new List<CobrosDetalles>();
-
+        [ForeignKey("DeudorId")]
+        [InverseProperty("Cobros")]
+        public virtual Deudores Deudor { get; set; } = null!;
 
     }
 }

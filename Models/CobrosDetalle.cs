@@ -15,7 +15,9 @@ namespace JoseEstrella_Ap1_P1.Models;
 		public double ValorCobrado { get; set; }
 
 		[ForeignKey("CobroId")]
-		public virtual Cobros Cobros { get; set; } = null;
+		[InverseProperty("CobrosDetalle")]
+		public virtual Cobros Cobro { get; set; } = null!;
 
-		
-	}
+
+
+    }

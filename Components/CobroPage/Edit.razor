@@ -36,7 +36,7 @@
                         <option value="" selected disabled>Elija una opción</option>
                         @foreach (var deudor in ListaDeudores)
                         {
-                            <option value="@deudor.DeudoresId">@deudor.Nombres</option>
+                            <option value="@deudor.DeudorId">@deudor.Nombres</option>
                         }
                     </InputSelect>
                     <ValidationMessage For="(() => Cobro.DeudorId)" />
@@ -82,7 +82,7 @@
                     </div>
 
                     <ul class="mt-3">
-                        @foreach (var detalle in Cobro.CobrosDetalles)
+                        @foreach (var detalle in Cobro.CobrosDetalle)
                         {
                             <li class="mt-2">
                                 Préstamo ID: @detalle.PrestamoId, Valor Cobrado: @detalle.ValorCobrado
@@ -131,7 +131,7 @@
     protected override async Task OnInitializedAsync()
     {
         Cobro = await cobrosService.Buscar(CobroId);
-        ListaDeudores = await deudoresService.Listar(d => d.DeudoresId > 0);
+        ListaDeudores = await deudoresService.Listar(d => d.DeudorId > 0);
     }
 
     public async Task Buscar()
@@ -157,7 +157,7 @@
             return;
         }
 
-        Cobro.CobrosDetalles.Add(new CobrosDetalles
+        Cobro.CobrosDetalle.Add(new CobrosDetalles
             {
                 PrestamoId = nuevoDetalle.PrestamoId,
                 ValorCobrado = nuevoDetalle.ValorCobrado
@@ -183,6 +183,6 @@
 
     public async Task Eliminar(CobrosDetalles detalle)
     {
-        Cobro.CobrosDetalles.Remove(detalle);
+        Cobro.CobrosDetalle.Remove(detalle);
     }
 }

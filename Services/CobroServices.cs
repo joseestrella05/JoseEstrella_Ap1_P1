@@ -15,7 +15,7 @@ public class CobroServices(Contexto contexto)
 	private async Task<bool> Insertar(Cobros cobro)
 	{
 		contexto.Cobros.Add(cobro);
-		await AfectarPrestamos(cobro.CobrosDetalles.ToArray(), TipoOperacion.Resta);
+		await AfectarPrestamos(cobro.CobrosDetalle.ToArray(), TipoOperacion.Resta);
 		return await contexto.SaveChangesAsync() > 0;
 	}
 
@@ -53,7 +53,7 @@ public class CobroServices(Contexto contexto)
 	public async Task<Cobros> Buscar(int cobroId)
 	{
 		return await contexto.Cobros.Include(d => d.Deudor)
-			.Include(d => d.CobrosDetalles)
+			.Include(d => d.CobrosDetalle)
 			.FirstOrDefaultAsync(c => c.CobroId == cobroId);
 	}
 
@@ -61,9 +61,9 @@ public class CobroServices(Contexto contexto)
 	{
 		var cobro = contexto.Cobros.Find(cobroId);
 
-		await AfectarPrestamos(cobro.CobrosDetalles.ToArray(), TipoOperacion.Suma);
+		await AfectarPrestamos(cobro.CobrosDetalle.ToArray(), TipoOperacion.Suma);
 
-		contexto.CobrosDetalles.RemoveRange(cobro.CobrosDetalles);
+		contexto.CobrosDetalles.RemoveRange(cobro.CobrosDetalle);
 		contexto.Cobros.Remove(cobro);
 		var cantidad = await contexto.SaveChangesAsync();
 		return cantidad > 0;
@@ -72,7 +72,7 @@ public class CobroServices(Contexto contexto)
 	public async Task<List<Cobros>> Listar(Expression<Func<Cobros, bool>> criterio)
 	{
 		return await contexto.Cobros.Include(d => d.Deudor)
-			.Include(d => d.CobrosDetalles)
+			.Include(d => d.CobrosDetalle)
 			.Where(criterio)
 			.AsNoTracking()
 			.ToListAsync();
