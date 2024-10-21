@@ -23,12 +23,12 @@ public class CobroServices(Contexto contexto)
 	{
 		foreach (var item in detalle)
 		{
-			var prestamo = await contexto.Prestamos.SingleAsync(p => p.PrestamoId == item.PrestamoId);
+			var prestamo = await contexto.Prestamos
+				.SingleAsync(p => p.PrestamoId == item.PrestamoId);
 			if (tipoOperacion == TipoOperacion.Resta)
 				prestamo.Balance -= item.ValorCobrado;
 			else
 				prestamo.Balance += item.ValorCobrado;
-
 		}
 	}
 
