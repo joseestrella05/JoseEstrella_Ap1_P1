@@ -1,14 +1,20 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace JoseEstrella_Ap1_P1.Models;
 
 public class Deudores
 {
     [Key]
-    [Required]
-    public int DeudoresId { get; set; }
+ 
+    public int DeudorId { get; set; }
 
-    [Required(ErrorMessage = " Campo obligatorio")]
     public string? Nombres { get; set; }
+
+    [InverseProperty("Deudor")]
+    public virtual ICollection<Cobros> Cobros { get; set; } = new List<Cobros>();
+
+    [InverseProperty("Deudor")]
+    public virtual ICollection<Prestamos> Prestamos { get; set; } = new List<Prestamos>();
 
 }
 

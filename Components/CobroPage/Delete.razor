@@ -20,9 +20,9 @@
 			<h6>Destalles de los cobro:</h6>
 			<div class="border border-success p-3 mt-3">
 				<ul>
-					@foreach (var Detalles in Cobro.CobrosDetalles)
+					@foreach (var Detalles in Cobro.CobrosDetalle)
 					{
-						<li>Detalle Id: @Detalles.DetallId</li>
+						<li>Detalle Id: @Detalles.DetalleId</li>
 						<li>Id: @Detalles.CobroId</li>
 						<li>Deudor Id: @Detalles.PrestamoId</li>
 						<li>Monto: @Detalles.ValorCobrado</li>
@@ -53,7 +53,7 @@
 
 	public async Task Eliminar()
 	{
-		await CobroServices.Delete(Cobro.CobroId);
+		//await CobroServices.Delete(Cobro.CobroId);
 		Navigation.NavigateTo("/Cobro/Index");
 	}
 }

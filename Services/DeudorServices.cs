@@ -11,8 +11,11 @@ namespace JoseEstrella_Ap1_P1.Services;
 
         public async Task<List<Deudores>> Listar(Expression<Func<Deudores, bool>> criterio)
         {
-            return await _contexto.Deudores
-                .AsNoTracking().Where(criterio)
+            return await contexto.Deudores
+                .Where(criterio)
+                .AsNoTracking()
                 .ToListAsync();
         }
+    
+    
     }

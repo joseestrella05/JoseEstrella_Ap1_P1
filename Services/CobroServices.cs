@@ -7,47 +7,82 @@ namespace JoseEstrella_Ap1_P1.Services;
 
 public class CobroServices(Contexto contexto)
 {
-    private readonly Contexto _contexto = contexto;
+	private async Task<bool> Existe(int cobroId)
+	{
+		return await contexto.Cobros.AnyAsync(c => c.CobroId == cobroId);
+	}
 
-    public async Task<bool> ExisteId(int id)
-    {
-        return await _contexto.Cobros.AnyAsync(t => t.CobroId == id);
-    }
+	private async Task<bool> Insertar(Cobros cobro)
+	{
+		contexto.Cobros.Add(cobro);
+		await AfectarPrestamos(cobro.CobrosDetalle.ToArray(), TipoOperacion.Resta);
+		return await contexto.SaveChangesAsync() > 0;
+	}
 
-    private async Task<bool> Insertar(Cobros cobros)
-    {
-        _contexto.Cobros.Add(cobros);
-        return await _contexto.SaveChangesAsync() > 0;
-    }
+	private async Task AfectarPrestamos(CobrosDetalles[] detalle, TipoOperacion tipoOperacion)
+	{
+		foreach (var item in detalle)
+		{
+			var prestamo = await contexto.Prestamos.SingleAsync(p => p.PrestamoId == item.PrestamoId);
+			if (tipoOperacion == TipoOperacion.Resta)
+				prestamo.Balance -= item.ValorCobrado;
+			else
+				prestamo.Balance += item.ValorCobrado;
 
-    private async Task<bool> Modificar(Cobros cobros)
-    {
-        _contexto.Update(cobros);
-        return await _contexto.SaveChangesAsync() > 0;
-    }
+		}
+	}
 
-    public async Task<bool> Guardar(Cobros cobros)
-    {
-        if (!await ExisteId(cobros.CobroId))
-            return await Insertar(cobros);
+	private async Task<bool> Modificar(Cobros cobro)
+	{
+		contexto.Update(cobro);
+		return await contexto.SaveChangesAsync() > 0;
+	}
 
-        return await Modificar(cobros);
-    }
-    public async Task<bool> Delete(int id)
-    {
-        return await _contexto.Cobros
-            .Where(t => t.CobroId == id).ExecuteDeleteAsync() > 0;
-    }
-    public async Task<Cobros?> Buscar(int id)
-    {
-        return await _contexto.Cobros.Include(c => c.CobrosDetalles)
-            .FirstOrDefaultAsync(c => c.CobroId == id);
-    }
+	public async Task<bool> Guardar(Cobros cobro)
+	{
+		if (!await Existe(cobro.CobroId))
+		{
+			return await Insertar(cobro);
+		}
+		else
+		{
+			return await Modificar(cobro);
+		}
+	}
 
-    public async Task<List<Cobros>> Listar(Expression<Func<Cobros, bool>> criterio)
-    {
-        return await _contexto.Cobros.Include(c => c.CobrosDetalles)
-            .AsNoTracking().Where(criterio).ToListAsync();
-    }
+	public async Task<Cobros> Buscar(int cobroId)
+	{
+		return await contexto.Cobros.Include(d => d.Deudor)
+			.Include(d => d.CobrosDetalle)
+			.FirstOrDefaultAsync(c => c.CobroId == cobroId);
+	}
+
+	public async Task<bool> Eliminar(int cobroId)
+	{
+		var cobro = contexto.Cobros.Find(cobroId);
+
+		await AfectarPrestamos(cobro.CobrosDetalle.ToArray(), TipoOperacion.Suma);
+
+		contexto.CobrosDetalles.RemoveRange(cobro.CobrosDetalle);
+		contexto.Cobros.Remove(cobro);
+		var cantidad = await contexto.SaveChangesAsync();
+		return cantidad > 0;
+	}
+
+	public async Task<List<Cobros>> Listar(Expression<Func<Cobros, bool>> criterio)
+	{
+		return await contexto.Cobros.Include(d => d.Deudor)
+			.Include(d => d.CobrosDetalle)
+			.Where(criterio)
+			.AsNoTracking()
+			.ToListAsync();
+	}
+
+
 }
 
+public enum TipoOperacion
+{
+	Suma = 1,
+	Resta = 2
+}
